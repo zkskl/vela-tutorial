@@ -26,8 +26,12 @@ cp cookies.sqlite /tmp/sess.sqlite   # salinan read-only untuk dipakai skrip
 - Sebelum `git push`, jalankan pemindai kebocoran:
 
 ```bash
-grep -rEn '(session=|@[a-z]+\.[a-z]{2,}|[0-9]{1,3}(\.[0-9]{1,3}){3}|https?://[a-z0-9-]+\.(ngrok|trycloudflare|localtunnel)\.[a-z]+)' .
-grep -rEn '[1-9A-HJ-NP-Za-km-z]{40,}' .    # kandidat alamat wallet/pool
+# 1) cookie/token literal, email, dan alamat IPv4
+grep -rEn '(session=[A-Za-z0-9+/=]{8,}|[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}|[0-9]{1,3}(\.[0-9]{1,3}){3})' .
+# 2) kandidat alamat wallet/pool (base58 panjang)
+grep -rEn '[1-9A-HJ-NP-Za-km-z]{40,}' .
+# 3) URL tunnel/domain sementara milikmu (cek manual, host-nya spesifik)
+grep -rEn 'https?://[a-z0-9-]+\.[a-z]+' . | grep -v 'example\|schema'
 ```
 
 Kalau ada hasil → **jangan push**, bersihkan dulu.
